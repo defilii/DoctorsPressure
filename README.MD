@@ -1,5 +1,5 @@
 # Doctors
-1- età media [0, 50]    -> max pazienti: 80
+- età media [0, 50]    -> max pazienti: 80
 - età media [51, 60]   -> max pazienti: 70
 - età media [61, 70]   -> max pazienti: 60
 - età media oltre i 70 -> max pazienti: 50

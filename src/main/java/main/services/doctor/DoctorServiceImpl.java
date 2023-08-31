@@ -6,6 +6,7 @@ import main.pojo.Patient;
 import main.pojo.PressureDevice;
 import main.services.patient.PatientServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,15 +54,54 @@ public class DoctorServiceImpl implements DoctorService {
         List<Patient> femalePatients = doctor.getPatients().stream()
                 .filter(patient -> Character.toUpperCase(patient.getGender()) == 'F')
                 .collect(Collectors.toList());
+        List<Patient> mergedPatients = new ArrayList<>();
+        mergedPatients.addAll(malePatients);
+        mergedPatients.addAll(femalePatients);
+        return mergedPatients;
     }
 
-    private boolean checkIfMeasureArentInRange(Patient patient, int range) throws InvalidAgeException {
+    // Come intelliJ segna corretto
+    private boolean checkIfMeasureArentInRange(Patient patient, int range) {
         PatientServiceImpl patientService = new PatientServiceImpl(patient);
-        int badMeasures = patientService.checkLastMeasurements(range).stream()
-                .filter(measure -> isThisInRange(measure, patient))
+        int badMeasures = (int) patientService.checkLastMeasurements(range).stream()
+                .filter(measure -> {
+                    try {
+                        return isThisInRange(measure, patient);
+                    } catch (InvalidAgeException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
                 .count();
         return badMeasures >= 3;
     }
+
+
+    // Come ho provato a correggere ma viene segnato sbagliato
+//    private boolean checkIfMeasureArentInRange(Patient patient, int range) {
+//        try{
+//        PatientServiceImpl patientService = new PatientServiceImpl(patient);
+//        int badMeasures = (int) patientService.checkLastMeasurements(range).stream()
+//                .filter(measure -> {
+//                    return isThisInRange(measure, patient);
+//                })
+//                .count();
+//        return badMeasures >= 3;}
+//        catch (InvalidAgeException e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
+
+
+    // Errore originario
+//    private boolean checkIfMeasureArentInRange(Patient patient, int range) {
+//        PatientServiceImpl patientService = new PatientServiceImpl(patient);
+//        int badMeasures = (int) patientService.checkLastMeasurements(range).stream()
+//                .filter(measure -> {
+//                    return isThisInRange(measure, patient);
+//                })
+//                .count();
+//        return badMeasures >= 3;
+//    }
 
     private boolean isThisInRange(Integer measure, Patient patient) throws InvalidAgeException {
         int age = patient.getAge();

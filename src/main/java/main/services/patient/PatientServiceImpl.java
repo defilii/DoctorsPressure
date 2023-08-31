@@ -18,21 +18,21 @@ public class PatientServiceImpl implements PatientService {
     public List<Integer> checkLastMeasurements(int range) {
         return patient.getLinkedDevice().getMeasurements().stream()
                 .filter(
-                        measurement -> isDateOfMeasurementWithingThisRange(measurement.getDate(), range))
+                        measurement -> isDateOfMeasurementWithinThisRange(measurement.getDate(), range))
                 .map(Measurement::getPressure)
                 .collect(Collectors.toList());
     }
 
     public boolean areLastMeasurementsEmpty() {
-        int emptyMeasureLastFiveDays =
+        int measurementInTheLastFiveDays =
                 (int) patient.getLinkedDevice().getMeasurements().stream()
                 .filter(
-                        measurement -> isDateOfMeasurementWithingThisRange(measurement.getDate(), 5))
+                        measurement -> isDateOfMeasurementWithinThisRange(measurement.getDate(), 5))
                 .count();
-        return emptyMeasureLastFiveDays >= 5;
+        return measurementInTheLastFiveDays == 0;
     }
 
-    private boolean isDateOfMeasurementWithingThisRange(LocalDate date, int range) {
+    private boolean isDateOfMeasurementWithinThisRange(LocalDate date, int range) {
         for (int x = 0; x <= range; x++) {
             if (date.isAfter(date.minusDays(range))) {
                 return true;

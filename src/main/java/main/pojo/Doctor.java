@@ -1,4 +1,4 @@
-package pojo;
+package main.pojo;
 
 import java.util.HashSet;
 import java.util.Set;

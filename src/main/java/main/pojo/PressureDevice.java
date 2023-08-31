@@ -1,4 +1,6 @@
-package pojo;
+package main.pojo;
+
+import main.services.pressureDevice.PressureDeviceImpl;
 
 import java.util.List;
 

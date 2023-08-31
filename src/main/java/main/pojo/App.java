@@ -1,4 +1,4 @@
-package pojo;
+package main.pojo;
 public class App 
 {
     public static void main( String[] args )

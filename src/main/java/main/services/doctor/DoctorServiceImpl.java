@@ -61,9 +61,10 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     // Come intelliJ segna corretto
-    private boolean checkIfMeasureArentInRange(Patient patient, int range) {
+    /*
+    private boolean checkIfMeasureArentInRange(Patient patient, int lastMeasures) {
         PatientServiceImpl patientService = new PatientServiceImpl(patient);
-        int badMeasures = (int) patientService.checkLastMeasurements(range).stream()
+        int badMeasures = (int) patientService.checkLastMeasurements(lastMeasures).stream()
                 .filter(measure -> {
                     try {
                         return isThisInRange(measure, patient);
@@ -74,22 +75,23 @@ public class DoctorServiceImpl implements DoctorService {
                 .count();
         return badMeasures >= 3;
     }
-
+    */
 
     // Come ho provato a correggere ma viene segnato sbagliato
-//    private boolean checkIfMeasureArentInRange(Patient patient, int range) {
-//        try{
-//        PatientServiceImpl patientService = new PatientServiceImpl(patient);
-//        int badMeasures = (int) patientService.checkLastMeasurements(range).stream()
-//                .filter(measure -> {
-//                    return isThisInRange(measure, patient);
-//                })
-//                .count();
-//        return badMeasures >= 3;}
-//        catch (InvalidAgeException e) {
-//            System.out.println(e.getMessage());
-//        }
-//    }
+    private boolean checkIfMeasureArentInRange(Patient patient, int range) {
+
+        PatientServiceImpl patientService = new PatientServiceImpl(patient);
+        int badMeasures = (int) patientService.checkLastMeasurements(range).stream()
+                .filter(measure -> {
+                    try {
+                        return isThisInRange(measure, patient);
+                    } catch (InvalidAgeException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).collect(Collectors.toList()).size();
+
+        return badMeasures >= 3;
+    }
 
 
     // Errore originario
